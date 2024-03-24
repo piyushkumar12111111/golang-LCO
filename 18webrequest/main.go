@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -12,7 +13,8 @@ func main() {
 	fmt.Println("Get Request Web Server")
 
 	//PerformGetRequest()
-	PerformPostRequest()
+	//PerformPostRequest()
+	PerformPostFormRequest()
 
 }
 
@@ -66,9 +68,8 @@ func PerformPostRequest() {
 	}
 
 	defer response.Body.Close()
-	
-	
-  content, err :=ioutil.ReadAll(response.Body)
+
+	content, err := ioutil.ReadAll(response.Body)
 
 	if err != nil {
 		panic(err)
@@ -76,3 +77,33 @@ func PerformPostRequest() {
 	fmt.Println("Data is: ", string(content))
 
 }
+
+func PerformPostFormRequest() {
+
+	const myurl = "http://localhost:8000/postform"
+
+	data := url.Values{}
+
+	data.Add("name", "Piyush")
+	data.Add("job", "Developer")
+	data.Add("id", "1")
+
+	response, err := http.PostForm(myurl, data)
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer response.Body.Close()
+
+	content, err := ioutil.ReadAll(response.Body)
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Data is: ", string(content))
+
+}
+
+// ! Post request is used to send the data to the server
