@@ -11,7 +11,8 @@ func main() {
 
 	fmt.Println("Get Request Web Server")
 
-	PerformGetRequest()
+	//PerformGetRequest()
+	PerformPostRequest()
 
 }
 
@@ -48,4 +49,30 @@ func PerformGetRequest() {
 	data := string(content)
 
 	fmt.Println("Data is: ", data)
+}
+
+func PerformPostRequest() {
+
+	const myurl = "http://localhost:8000/post"
+
+	//! sending the data to the server is called payload
+
+	requestBody := strings.NewReader(`{"name":"Piyush", "job":"Developer", "id":1}`)
+
+	response, err := http.Post(myurl, "application/json", requestBody)
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer response.Body.Close()
+	
+	
+  content, err :=ioutil.ReadAll(response.Body)
+
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Data is: ", string(content))
+
 }
