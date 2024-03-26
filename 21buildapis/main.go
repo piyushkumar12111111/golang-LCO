@@ -43,14 +43,14 @@ func ServerHome(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintf(w, "Welcome to the Home Page")
 
-	w.Write([]byte("<h1>Welcome to the API Home Page</h1>"))
+	w.Write([]byte("<h1>Welcome to the API Home Page</h1>")) //! write to the response to the writer object w and convert the string to byte
 }
 
 func GetAllCourses(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Get all courses")
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(cources)
+	json.NewEncoder(w).Encode(cources) //! encode the courses to json and write to the response writer object w
 
 }
 
@@ -101,7 +101,7 @@ func CreateOneCource(w http.ResponseWriter, r *http.Request) {
 	//	course.CourseID = strconv.Itoa(rand.Intn(1000))
 	cources = append(cources, course)
 
-	json.NewEncoder(w).Encode(course)
+	json.NewEncoder(w).Encode(course) //! successfully added the cource to the db
 	return
 }
 
@@ -135,4 +135,31 @@ func UpdateOneCource(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode("No course found with the id")
 	return
+}
+
+func DeleteOneCource(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("Delete one course")
+	w.Header().Set("Content-Type", "application/json")
+
+	//! grab id from request
+	params := mux.Vars(r)
+
+	//! loop through the courses and find the course with the id
+
+	for index, item := range cources {
+
+		if item.CourseID == params["id"] {
+
+			cources = append(cources[:index], cources[index+1:]...)
+
+			json.NewEncoder(w).Encode("Course deleted successfully") //! crefting a response in json
+			return
+		}
+	}
+
+	json.NewEncoder(w).Encode("No course found with the id")
+
+	return
+
 }
