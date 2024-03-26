@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -34,6 +35,28 @@ func (c *Course) Isempty() bool {
 }
 
 func main() {
+
+	fmt.Println("Welcome to the API")
+
+	//! init router
+	r := mux.NewRouter()
+
+	//! mock data   //! seeding of data to the db
+	cources = append(cources, Course{CourseID: "1", CourseName: "Course 1", CoursePrice: 100, Author: &Author{FullName: "Author 1", Website: "www.author1.com"}})
+	cources = append(cources, Course{CourseID: "2", CourseName: "Course 2", CoursePrice: 200, Author: &Author{FullName: "Author 2", Website: "www.author2.com"}})
+	cources = append(cources, Course{CourseID: "3", CourseName: "Course 3", CoursePrice: 300, Author: &Author{FullName: "Author 3", Website: "www.author3.com"}})
+
+	//! route handlers / endpoints
+	r.HandleFunc("/", ServerHome).Methods("GET")
+	r.HandleFunc("/api/cources", GetAllCourses).Methods("GET")
+	r.HandleFunc("/api/cources/{id}", GetOneCource).Methods("GET")
+	r.HandleFunc("/api/cources", CreateOneCource).Methods("POST")
+	r.HandleFunc("/api/cources/{id}", UpdateOneCource).Methods("PUT")
+	r.HandleFunc("/api/cources/{id}", DeleteOneCource).Methods("DELETE")
+
+	//! start server
+	//http.ListenAndServe(":3000", r)
+	log.Fatal(http.ListenAndServe(":9000", r)) //! log fatal if there is an error in the server
 
 }
 
